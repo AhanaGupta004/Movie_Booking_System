@@ -1,0 +1,89 @@
+CREATE DATABASE IF NOT EXISTS movies;
+USE movies;
+
+-- Users Table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('Admin', 'Customer') NOT NULL,
+    reset_token VARCHAR(100) DEFAULT NULL,
+    reset_token_expiry DATETIME DEFAULT NULL
+);
+
+-- Halls Table
+CREATE TABLE IF NOT EXISTS halls (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    total_seats INT NOT NULL,
+    hall_rows INT NOT NULL,
+    hall_columns INT NOT NULL
+);
+
+-- Movies Table
+CREATE TABLE IF NOT EXISTS movies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    poster VARCHAR(255) DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    duration INT NOT NULL,
+    genre VARCHAR(100) DEFAULT NULL,
+    hall_id INT DEFAULT NULL,
+    price_per_seat DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (hall_id) REFERENCES halls(id) ON DELETE SET NULL
+);
+
+-- Showtimes Table
+CREATE TABLE IF NOT EXISTS showtimes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT NOT NULL,
+    show_date DATE NOT NULL,
+    show_time TIME NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+);
+
+-- Seats Table
+CREATE TABLE IF NOT EXISTS seats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    hall_id INT NOT NULL,
+    seat_number VARCHAR(10) NOT NULL UNIQUE,
+    FOREIGN KEY (hall_id) REFERENCES halls(id) ON DELETE CASCADE
+);
+
+-- Bookings Table
+CREATE TABLE IF NOT EXISTS bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    showtime_id INT NOT NULL,
+    seat_number VARCHAR(10) NOT NULL,
+    seats INT NOT NULL,
+    booking_date DATETIME NOT NULL DEFAULT NOW(),
+    total_price DECIMAL(10,2) NOT NULL,
+    show_time TIME NOT NULL,
+    show_date DATE DEFAULT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
+    FOREIGN KEY (showtime_id) REFERENCES showtimes(id) ON DELETE CASCADE,
+    UNIQUE KEY (showtime_id, seat_number) -- Prevent duplicate seat booking
+);
+
+-- Reviews Table
+CREATE TABLE IF NOT EXISTS reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    comment TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+);
+
+-- Snacks Table
+CREATE TABLE IF NOT EXISTS snacks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    image VARCHAR(255) DEFAULT NULL
+);
