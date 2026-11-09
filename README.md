@@ -4,6 +4,8 @@ A web-based **Movie Booking System** developed using **PHP, MySQL, HTML, CSS, Ja
 
 ---
 
+
+
 ##  Features
 
 ###  User Module
@@ -35,6 +37,8 @@ A web-based **Movie Booking System** developed using **PHP, MySQL, HTML, CSS, Ja
 
 ---
 
+
+
 ##  Technologies Used
 
 | Technology | Purpose |
@@ -48,6 +52,8 @@ A web-based **Movie Booking System** developed using **PHP, MySQL, HTML, CSS, Ja
 | XAMPP | Local Server |
 
 ---
+
+
 
 ##  Project Structure
 
@@ -82,6 +88,8 @@ MovieBookingSystem/
 ```
 
 ---
+
+
 
 ##  Database
 
